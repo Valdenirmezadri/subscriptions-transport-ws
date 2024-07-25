@@ -380,6 +380,7 @@ export class SubscriptionServer {
                 })
                 .then(() => {
                   this.sendMessage(connectionContext, opId, MessageTypes.GQL_COMPLETE, null);
+                  this.unsubscribe(connectionContext, opId);
                 })
                 .catch((e: Error) => {
                   let error = e;
@@ -398,10 +399,16 @@ export class SubscriptionServer {
                   }
 
                   this.sendError(connectionContext, opId, error);
+                  this.unsubscribe(connectionContext, opId);
                 });
 
               return executionIterable;
             }).then((subscription: ExecutionIterator) => {
+              if (connectionContext.operations[opId] == null) {
+                // subscription already unsubscribed
+                subscription.return()
+                throw new Error('subscription already unsubscribed!')
+              }
               connectionContext.operations[opId] = subscription;
             }).then(() => {
               // NOTE: This is a temporary code to support the legacy protocol.
