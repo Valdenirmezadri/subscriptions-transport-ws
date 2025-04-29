@@ -1,6 +1,6 @@
 {
   "name": "subscriptions-transport-ws-unsubscribe-fix",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "A websocket transport for GraphQL subscriptions",
   "main": "dist/index.js",
   "browser": "dist/client.js",
